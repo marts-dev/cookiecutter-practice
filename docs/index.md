@@ -9,7 +9,7 @@
 
 -   Free software: MIT License
 -   Documentation: <https://marts-dev.github.io/cookiecutter_practice>
-    
+
 
 ## Features
 
