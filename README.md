@@ -14,4 +14,6 @@
 
 ## Features
 
--   TODO
+-   Map Creation using `LeafMap`
+-   Map Creation using `FoliumMap`
+-   Supports differnt basemap/layer tiles from https://leaflet-extras.github.io/leaflet-providers/preview/

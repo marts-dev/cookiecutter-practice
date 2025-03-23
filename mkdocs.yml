@@ -84,3 +84,5 @@ nav:
     - API Reference:
           - cookiecutter_practice module: cookiecutter_practice.md
           - common module: common.md
+          - LeafMap module: LeafMap.md
+          - FoliumMap module: FoliumMap.md
