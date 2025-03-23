@@ -5,6 +5,16 @@ import geopandas as gpd
 
 class Map(folium.Map):
     def __init__(self, location=(20, 0), zoom_start=2, height="100%", **kwargs):
+        """
+        Create a FoliumMap Map instance.
+
+        Parameters
+        ----------
+        center : tuple\n The center of the map (latitude, longitude)
+        zoom_start : int\n The initial zoom level of the map
+        height : str\n The height of the map
+        **kwargs : dict\n Additional keyword arguments
+        """
         super().__init__(
             location=location, zoom_start=zoom_start, height=height, **kwargs
         )
@@ -65,7 +75,7 @@ class Map(folium.Map):
 
         Examples
         --------
-        >>> m = FoliumMap()
+        >>> m = FoliumMap.Map()
         >>> m.add_vector(name='countries', url='https://ipyleaflet.readthedocs.io/en/latest/_downloads/countries.geo.json', style={'color': 'black', 'fillColor': '#3366cc', 'opacity':0.05, 'weight':1.9, 'dashArray':'2', 'fillOpacity':0.6}, highlight_style={'fillColor': 'red' })
         """
 

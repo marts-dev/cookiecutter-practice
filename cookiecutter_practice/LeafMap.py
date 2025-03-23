@@ -9,7 +9,7 @@ class Map(ipyleaflet.Map):
 
     def __init__(self, center=(20, 0), zoom=2, height="600px", **kwargs):
         """
-        Create a Leaflet Map instance.
+        Create a LeafMap Map instance.
 
         Parameters
         ----------
@@ -120,7 +120,7 @@ class Map(ipyleaflet.Map):
 
         Examples
         --------
-        >>> m = LeafMap()
+        >>> m = LeafMap.Map()
         >>> m.add_vector(name='countries', url='https://ipyleaflet.readthedocs.io/en/latest/_downloads/countries.geo.json', style={'color': 'black', 'fillColor': '#3366cc', 'opacity':0.05, 'weight':1.9, 'dashArray':'2', 'fillOpacity':0.6}, hover_style={'fillColor': 'red' }, point_style={'radius': 5, 'color': 'red', 'fillOpacity': 0.8, 'fillColor': 'blue', 'weight': 3, 'type':'circle'})
         """
 
