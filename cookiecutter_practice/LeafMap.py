@@ -13,10 +13,14 @@ class Map(ipyleaflet.Map):
 
         Parameters
         ----------
-        center : tuple\n The center of the map (latitude, longitude)
-        zoom : int\n The initial zoom level of the map
-        height : str\n The height of the map
-        **kwargs : dict\n Additional keyword arguments
+        **center** (tuple): The center of the map (latitude, longitude)
+
+        **zoom** (int): The initial zoom level of the map
+
+        **height** (str): The height of the map
+
+        **kwargs** (dict): Additional keyword arguments
+
         """
         super().__init__(center=center, zoom=zoom, scroll_wheel_zoom=True, **kwargs)
         self.layout.height = height
@@ -27,7 +31,7 @@ class Map(ipyleaflet.Map):
 
         Parameters
         ----------
-        basemap : str, default="OpenTopoMap"\n The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
+        **basemap** (str, default="OpenTopoMap"): The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
 
         Returns
         ------
@@ -48,7 +52,7 @@ class Map(ipyleaflet.Map):
 
         Parameters
         ----------
-        basemap : str\n The name of the basemap/layer to remove. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
+        **basemap** (str): The name of the basemap/layer to remove. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
 
         Returns
         ------
@@ -69,7 +73,7 @@ class Map(ipyleaflet.Map):
 
         Parameters
         ----------
-        position : str, default="topright"\n The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright'
+        **position** (str, default="topright"): The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright'
 
         Returns
         ------
@@ -107,12 +111,17 @@ class Map(ipyleaflet.Map):
 
         Parameters
         ----------
-        name : str\n The name of the vector layer
-        url : str, path object or file-like object\n Either the absolute or relative path to the file or URL to be opened, or any object with a read() method (such as an open file or StringIO)
-        geo_data : geopandas.GeoDataFrame\n A GeoDataFrame containing the vector data
-        style : dict\n A dictionary of Leaflet Path options
-        hover_style : dict\n A dictionary of Leaflet Path options
-        point_style : dict\n A dictionary of Leaflet Path options
+        **name** (str): The name of the vector layer
+
+        **url** (str, path object or file-like object): Either the absolute or relative path to the file or URL to be opened, or any object with a read() method (such as an open file or StringIO)
+
+        **geo_data** (geopandas.GeoDataFrame): A GeoDataFrame containing the vector data
+
+        **style** (dict): A dictionary of Leaflet Path options
+
+        **hover_style** (dict): A dictionary of Leaflet Path options
+
+        **point_style** (dict): A dictionary of Leaflet Path options
 
         Returns
         ------
@@ -120,8 +129,10 @@ class Map(ipyleaflet.Map):
 
         Examples
         --------
-        >>> m = LeafMap.Map()
-        >>> m.add_vector(name='countries', url='https://ipyleaflet.readthedocs.io/en/latest/_downloads/countries.geo.json', style={'color': 'black', 'fillColor': '#3366cc', 'opacity':0.05, 'weight':1.9, 'dashArray':'2', 'fillOpacity':0.6}, hover_style={'fillColor': 'red' }, point_style={'radius': 5, 'color': 'red', 'fillOpacity': 0.8, 'fillColor': 'blue', 'weight': 3, 'type':'circle'})
+        ```python
+        m = LeafMap.Map()
+        m.add_vector(name='countries', url='https://ipyleaflet.readthedocs.io/en/latest/_downloads/countries.geo.json', style={'color': 'black', 'fillColor': '#3366cc', 'opacity':0.05, 'weight':1.9, 'dashArray':'2', 'fillOpacity':0.6}, hover_style={'fillColor': 'red' }, point_style={'radius': 5, 'color': 'red', 'fillOpacity': 0.8, 'fillColor': 'blue', 'weight': 3, 'type':'circle'})
+        ```
         """
 
         if url is None and geo_data is None:

@@ -10,10 +10,14 @@ class Map(folium.Map):
 
         Parameters
         ----------
-        center : tuple\n The center of the map (latitude, longitude)
-        zoom_start : int\n The initial zoom level of the map
-        height : str\n The height of the map
-        **kwargs : dict\n Additional keyword arguments
+        **center** (tuple): The center of the map (latitude, longitude)
+
+        **zoom_start** (int): The initial zoom level of the map
+
+        **height** (str): The height of the map
+
+        **kwargs** (dict): Additional keyword arguments
+
         """
         super().__init__(
             location=location, zoom_start=zoom_start, height=height, **kwargs
@@ -26,7 +30,7 @@ class Map(folium.Map):
 
         Parameters
         ----------
-        basemap : str, default="OpenStreetMap\n The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'CartoDB positron', 'CartoDB dark_matter', 'OpenTopoMap'.
+        **basemap** (str, default="OpenStreetMap): The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'CartoDB positron', 'CartoDB dark_matter', 'OpenTopoMap'.
         You may refer here for other basemaps to use: https://leaflet-extras.github.io/leaflet-providers/preview/
 
         Returns
@@ -45,7 +49,7 @@ class Map(folium.Map):
 
         Parameters
         ----------
-        position : str, default="topright"\n The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright' default: 'topright'
+        **position** (str, default="topright"): The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright' default: 'topright'
 
         Returns
         ------
@@ -63,11 +67,15 @@ class Map(folium.Map):
 
         Parameters
         ----------
-        name : str\n The name of the vector layer
-        url : str, path object or file-like object\n Either the absolute or relative path to the file or URL to be opened, or any object with a read() method (such as an open file or StringIO)
-        geo_data : geopandas.GeoDataFrame\n A GeoDataFrame containing the vector data
-        style : dict, function\n A dictionary of Folium Path options or a function defining the style of the vector layer
-        highlight_style : dict, function\n A dictionary of Folium Path options or a function defining the style of the vector layer when highlighted
+        **name** (str): The name of the vector layer
+
+        **url** (str, path object or file-like object): Either the absolute or relative path to the file or URL to be opened, or any object with a read() method (such as an open file or StringIO)
+
+        **geo_data** (geopandas.GeoDataFrame): A GeoDataFrame containing the vector data
+
+        **style** (dict, function): A dictionary of Folium Path options or a function defining the style of the vector layer
+
+        **highlight_style** (dict, function): A dictionary of Folium Path options or a function defining the style of the vector layer when highlighted
 
         Returns
         ------
@@ -75,8 +83,10 @@ class Map(folium.Map):
 
         Examples
         --------
-        >>> m = FoliumMap.Map()
-        >>> m.add_vector(name='countries', url='https://ipyleaflet.readthedocs.io/en/latest/_downloads/countries.geo.json', style={'color': 'black', 'fillColor': '#3366cc', 'opacity':0.05, 'weight':1.9, 'dashArray':'2', 'fillOpacity':0.6}, highlight_style={'fillColor': 'red' })
+        ```python
+        m = FoliumMap.Map()
+        m.add_vector(name='countries', url='https://ipyleaflet.readthedocs.io/en/latest/_downloads/countries.geo.json', style={'color': 'black', 'fillColor': '#3366cc', 'opacity':0.05, 'weight':1.9, 'dashArray':'2', 'fillOpacity':0.6}, highlight_style={'fillColor': 'red' })
+        ```
         """
 
         def style_function(feature):
