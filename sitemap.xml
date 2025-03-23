@@ -2,38 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
+    </url>
+    <url>
+         <loc>https://marts-dev.github.io/cookiecutter-practice/FoliumMap/</loc>
+         <lastmod>2025-03-23</lastmod>
+    </url>
+    <url>
+         <loc>https://marts-dev.github.io/cookiecutter-practice/LeafMap/</loc>
+         <lastmod>2025-03-23</lastmod>
     </url>
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/changelog/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
     </url>
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/common/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
     </url>
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/contributing/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
     </url>
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/cookiecutter_practice/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
     </url>
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/faq/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
     </url>
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/installation/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
     </url>
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/usage/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
     </url>
     <url>
          <loc>https://marts-dev.github.io/cookiecutter-practice/examples/intro/</loc>
-         <lastmod>2025-03-22</lastmod>
+         <lastmod>2025-03-23</lastmod>
     </url>
 </urlset>
