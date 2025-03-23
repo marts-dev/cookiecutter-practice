@@ -33,9 +33,23 @@ jobs:
                   twine upload dist/*
     release:
         runs-on: ubuntu-latest
+        needs:
+            - deploy
+        permissions:
+        # IMPORTANT: this permission is mandatory for trusted publishing
+        id-token: write
+
+        # Dedicated environments with protections for publishing are strongly recommended.
+        environment:
+            name: pypi
+            url: https://pypi.org/project/cookiecutter-practice/
 
         steps:
-            - uses: "marvinpinto/action-automatic-releases@latest"
+            - name: Retrieve release distributions
+              uses: actions/download-artifact@v4
               with:
-                repo_token: "${{ secrets.GITHUB_TOKEN }}"
-                prerelease: false
+                name: release-dists
+                path: dist/
+
+            - name: Publish release distributions to PyPI
+              uses: pypa/gh-action-pypi-publish@6f7e8d9c0b1a2c3d4e5f6a7b8c9d0e1f2a3b4c5d
