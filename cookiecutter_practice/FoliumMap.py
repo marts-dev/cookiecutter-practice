@@ -5,18 +5,13 @@ import geopandas as gpd
 
 class Map(folium.Map):
     def __init__(self, location=(20, 0), zoom_start=2, height="100%", **kwargs):
-        """
-        Create a FoliumMap Map instance.
+        """Create a FoliumMap Map instance.
 
-        Parameters
-        ----------
-        **center** (tuple): The center of the map (latitude, longitude)
-
-        **zoom_start** (int): The initial zoom level of the map
-
-        **height** (str): The height of the map
-
-        **kwargs** (dict): Additional keyword arguments
+        Args:
+            location (tuple): The center of the map (latitude, longitude)
+            zoom_start (int): The initial zoom level of the map
+            height (str): The height of the map
+            **kwargs (dict): Additional keyword arguments
 
         """
         super().__init__(
@@ -25,17 +20,13 @@ class Map(folium.Map):
         # self.add_control(ipyleaflet.LayersControl())
 
     def add_basemap(self, basemap="OpenStreetMap"):
-        """
-        Add a basemap/layer to the map.
+        """Add a basemap/layer to the map.
 
-        Parameters
-        ----------
-        **basemap** (str, default="OpenStreetMap): The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'CartoDB positron', 'CartoDB dark_matter', 'OpenTopoMap'.
-        You may refer here for other basemaps to use: https://leaflet-extras.github.io/leaflet-providers/preview/
+        Args:
+            basemap (str): The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'CartoDB positron', 'CartoDB dark_matter', 'OpenTopoMap'
 
-        Returns
-        ------
-        None
+        You may refer here for other basemaps to use: [Leaflet Providers](https://leaflet-extras.github.io/leaflet-providers/preview/)
+
         """
         try:
             folium.TileLayer(basemap).add_to(self)
@@ -44,16 +35,11 @@ class Map(folium.Map):
             folium.TileLayer("OpenStreetMap").add_to(self)
 
     def add_layer_control(self, position="topright"):
-        """
-        Add a layer control to the map.
+        """Add a layer control to the map.
 
-        Parameters
-        ----------
-        **position** (str, default="topright"): The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright' default: 'topright'
+        Args:
+            position (str): The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright'
 
-        Returns
-        ------
-        None
         """
         if position not in ["topleft", "topright", "bottomleft", "bottomright"]:
             logging.warning(f"Position {position} not valid. Using topright instead.")
@@ -62,31 +48,20 @@ class Map(folium.Map):
             folium.LayerControl(position=position).add_to(self)
 
     def add_vector(self, name, url=None, geo_data=None, **kwargs):
-        """
-        Add a vector layer to the map.
+        """Add a vector layer to the map.
 
-        Parameters
-        ----------
-        **name** (str): The name of the vector layer
+        Args:
+            name (str): The name of the vector layer
+            url (str, path object or file-like object): Either the absolute or relative path to the file or URL to be opened, or any object with a read() method (such as an open file or StringIO)
+            geo_data (geopandas.GeoDataFrame): A GeoDataFrame containing the vector data
+            style (dict, function): A dictionary of Folium Path options or a function defining the style of the vector layer
+            highlight_style (dict, function): A dictionary of Folium Path options or a function defining the style of the vector layer when highlighted
 
-        **url** (str, path object or file-like object): Either the absolute or relative path to the file or URL to be opened, or any object with a read() method (such as an open file or StringIO)
-
-        **geo_data** (geopandas.GeoDataFrame): A GeoDataFrame containing the vector data
-
-        **style** (dict, function): A dictionary of Folium Path options or a function defining the style of the vector layer
-
-        **highlight_style** (dict, function): A dictionary of Folium Path options or a function defining the style of the vector layer when highlighted
-
-        Returns
-        ------
-        None
-
-        Examples
-        --------
-        ```python
-        m = FoliumMap.Map()
-        m.add_vector(name='countries', url='https://ipyleaflet.readthedocs.io/en/latest/_downloads/countries.geo.json', style={'color': 'black', 'fillColor': '#3366cc', 'opacity':0.05, 'weight':1.9, 'dashArray':'2', 'fillOpacity':0.6}, highlight_style={'fillColor': 'red' })
-        ```
+        Examples:
+            ```python
+            m = FoliumMap.Map()
+            m.add_vector(name='countries', url='https://ipyleaflet.readthedocs.io/en/latest/_downloads/countries.geo.json', style={'color': 'black', 'fillColor': '#3366cc', 'opacity':0.05, 'weight':1.9, 'dashArray':'2', 'fillOpacity':0.6}, highlight_style={'fillColor': 'red' })
+            ```
         """
 
         def style_function(feature):
