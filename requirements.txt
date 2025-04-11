@@ -5,4 +5,3 @@ geopandas
 rasterio
 fiona
 localtileserver
-ipywidgets
