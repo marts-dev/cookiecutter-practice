@@ -2,3 +2,7 @@ numpy
 ipyleaflet
 folium
 geopandas
+rasterio
+fiona
+localtileserver
+ipywidgets

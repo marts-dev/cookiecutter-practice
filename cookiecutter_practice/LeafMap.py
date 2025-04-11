@@ -119,3 +119,136 @@ class Map(ipyleaflet.Map):
                 return
             except Exception:
                 logging.warning(f"There was an error adding the vector layer.")
+
+    def add_raster(self, url, name, colormap=None, opacity=1.0, **kwargs):
+        """Add a raster layer to the map.
+
+        Args:
+            url (str): The URL of the raster layer
+            name (str): The name of the raster layer
+            colormap (str): The colormap to use for the raster layer
+            opacity (float): The opacity of the raster layer
+            **kwargs: Additional keyword arguments
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_raster(url='https://example.com/raster.tif', name='raster', colormap='viridis', opacity=0.5)
+            ```
+        """
+        from localtileserver import TileClient, get_leaflet_tile_layer
+
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+
+        try:
+            client = TileClient(url)
+            raster_layer = get_leaflet_tile_layer(
+                client, name=name, colormap=colormap, opacity=opacity, **kwargs
+            )
+            self.__layers[name] = raster_layer
+            self.add(raster_layer)
+            self.center = client.center()
+            self.zoom = client.default_zoom
+        except Exception:
+            logging.warning(f"There was an error adding the raster layer.")
+
+    def add_image(self, url, bounds=None, opacity=1.0, **kwargs):
+        """Add an image layer to the map.
+
+        Args:
+            url (str): The URL of the image layer
+            bounds (tuple): The bounds of the image layer ((south, west), (north, east))
+            opacity (float): The opacity of the image layer
+            **kwargs: Additional keyword arguments
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_image(url='https://example.com/image.png', bounds=((40, -100), (30, -90)), opacity=0.5)
+            ```
+        """
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+
+        if bounds is None:
+            bounds = ((-90, -180), (90, 180))
+        from rasterio.warp import transform
+
+        def get_center_latlon(bounds):
+            center_x = (bounds[0][1] + bounds[1][1]) / 2
+            center_y = (bounds[0][0] + bounds[1][0]) / 2
+            # lon, lat = transform(src.crs, "EPSG:4326", [center_x], [center_y])
+            return center_y, center_x
+
+        try:
+            image_layer = ipyleaflet.ImageOverlay(
+                url=url, bounds=bounds, opacity=opacity, **kwargs
+            )
+            self.add(image_layer)
+            lat, lon = get_center_latlon(bounds)
+            self.center = (lat, lon)
+        except Exception:
+            logging.warning(f"There was an error adding the image layer.")
+
+    def add_video(self, url, bounds=None, opacity=1.0, **kwargs):
+        """Add a video layer to the map.
+
+        Args:
+            url (str): The URL of the video layer
+            bounds (tuple): The bounds of the video layer ((south, west), (north, east))
+            opacity (float): The opacity of the video layer
+            **kwargs: Additional keyword arguments
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_video(url='https://example.com/video.mp4', bounds=((40, -100), (30, -90)), opacity=0.5)
+            ```
+        """
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+
+        try:
+            video_layer = ipyleaflet.VideoOverlay(
+                url=url, opacity=opacity, bounds=bounds, **kwargs
+            )
+            self.add(video_layer)
+        except Exception:
+            logging.warning(f"There was an error adding the video layer.")
+
+    def add_wms_layer(self, url, layers, name, format="image/png", transparent=True):
+        """Add a WMS layer to the map.
+
+        Args:
+            url (str): The URL of the WMS layer
+            layers (str): The layers of the WMS layer
+            name (str): The name of the WMS layer
+            format (str): The format of the WMS layer
+            transparent (bool): Whether the WMS layer is transparent
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_wms_layer(url='https://example.com/wms', layers='layer1,layer2', name='wms', format='image/png', transparent=True)
+            ```
+        """
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+
+        try:
+            wms_layer = ipyleaflet.WMSLayer(
+                url=url,
+                layers=layers,
+                name=name,
+                format=format,
+                transparent=transparent,
+            )
+            self.__layers[name] = wms_layer
+            self.add(wms_layer)
+        except Exception:
+            logging.warning(f"There was an error adding the WMS layer.")

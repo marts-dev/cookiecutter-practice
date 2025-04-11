@@ -105,13 +105,17 @@ class Map(folium.Map):
         if url is not None:
             try:
                 gdf = gpd.read_file(url)
-                folium.GeoJson(
+                gj = folium.GeoJson(
                     gdf,
                     name=name,
                     style_function=style_function,
                     highlight_function=highlight_function,
                     **kwargs,
-                ).add_to(self)
+                )
+
+                fg = folium.FeatureGroup(name=name, show=True)
+                fg.add_to(self)
+                gj.add_to(fg)
                 return
             except Exception:
                 logging.warning(f"There was an error adding the vector layer.")
@@ -127,3 +131,36 @@ class Map(folium.Map):
                 return
             except Exception:
                 logging.warning(f"There was an error adding the vector layer.")
+
+    def add_raster(self, url, name, colormap=None, opacity=1.0, **kwargs):
+        """Add a raster layer to the map.
+
+        Args:
+            url (str): The URL of the raster layer
+            name (str): The name of the raster layer
+            colormap (str): The colormap to use for the raster layer
+            opacity (float): The opacity of the raster layer
+            **kwargs: Additional keyword arguments
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_raster(url='https://example.com/raster.tif', name='raster', colormap='viridis', opacity=0.5)
+            ```
+        """
+        from localtileserver import TileClient, get_folium_tile_layer
+
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+
+        try:
+            client = TileClient(url)
+            raster_layer = get_folium_tile_layer(
+                client, name=name, colormap=colormap, opacity=opacity, **kwargs
+            )
+            fg = folium.FeatureGroup(name=name, show=True)
+            fg.add_to(self)
+            raster_layer.add_to(fg)
+        except Exception:
+            logging.warning(f"There was an error adding the raster layer.")
