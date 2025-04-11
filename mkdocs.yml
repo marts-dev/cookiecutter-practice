@@ -81,6 +81,7 @@ nav:
     - Report Issues: https://github.com/marts-dev/cookiecutter-practice/issues
     - Examples:
         - examples/intro.ipynb
+        - examples/rasterdata.ipynb
     - API Reference:
           - cookiecutter_practice module: cookiecutter_practice.md
           - common module: common.md
