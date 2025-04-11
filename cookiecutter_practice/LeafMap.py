@@ -10,7 +10,7 @@ class Map(ipyleaflet.Map):
     def __init__(self, center=(20, 0), zoom=2, height="600px", **kwargs):
         """Create a LeafMap Map instance.
 
-        Args:
+        Params:
             center (tuple): The center of the map (latitude, longitude)
             zoom (int): The initial zoom level of the map
             height (str): The height of the map
@@ -23,7 +23,7 @@ class Map(ipyleaflet.Map):
     def add_basemap(self, basemap="OpenTopoMap"):
         """Add a basemap/layer to the map.
 
-        Args:
+        Params:
             basemap (str): The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
 
         """
@@ -39,7 +39,7 @@ class Map(ipyleaflet.Map):
     def remove_basemap(self, basemap):
         """Remove a basemap/layer from the map.
 
-        Args:
+        Params:
             basemap (str): The name of the basemap/layer to remove. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
 
         """
@@ -55,7 +55,7 @@ class Map(ipyleaflet.Map):
     def add_layer_control(self, position="topright"):
         """Add a layer control to the map.
 
-        Args:
+        Params:
             position (str): The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright'
 
         """
@@ -78,7 +78,7 @@ class Map(ipyleaflet.Map):
     def add_vector(self, name, url=None, geo_data=None, **kwargs):
         """Add a vector layer to the map.
 
-        Args:
+        Params:
             name (str): The name of the vector layer
             url (str, path object or file-like object): Either the absolute or relative path to the file or URL to be opened, or any object with a read() method (such as an open file or StringIO)
             geo_data (geopandas.GeoDataFrame): A GeoDataFrame containing the vector data
@@ -107,8 +107,8 @@ class Map(ipyleaflet.Map):
                 self.__layers[name] = geo_data
                 self.add(geo_data)
                 return
-            except Exception:
-                logging.warning(f"There was an error adding the vector layer.")
+            except Exception as e:
+                logging.warning(f"There was an error adding the vector layer: {e}")
         if geo_data is not None:
             try:
                 geo_data = ipyleaflet.GeoData(
@@ -117,5 +117,142 @@ class Map(ipyleaflet.Map):
                 self.__layers[name] = geo_data
                 self.add(geo_data)
                 return
-            except Exception:
-                logging.warning(f"There was an error adding the vector layer.")
+            except Exception as e:
+                logging.warning(f"There was an error adding the vector layer: {e}")
+
+    def add_raster(self, url, name, colormap=None, opacity=1.0, **kwargs):
+        """Add a raster layer to the map.
+
+        Params:
+            url (str): The URL of the raster layer
+            name (str): The name of the raster layer
+            colormap (str): The colormap to use for the raster layer
+            opacity (float): The opacity of the raster layer
+            **kwargs: Additional keyword arguments
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_raster(url='https://example.com/raster.tif', name='raster', colormap='viridis', opacity=0.5)
+            ```
+        """
+        from localtileserver import TileClient, get_leaflet_tile_layer
+
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+
+        try:
+            client = TileClient(url)
+            raster_layer = get_leaflet_tile_layer(
+                client, name=name, colormap=colormap, opacity=opacity, **kwargs
+            )
+            self.__layers[name] = raster_layer
+            self.add(raster_layer)
+            self.center = client.center()
+            self.zoom = client.default_zoom
+        except Exception as e:
+            logging.warning(f"There was an error adding the raster layer: {e}")
+
+    def add_image(self, url, bounds=None, opacity=1.0, **kwargs):
+        """Add an image layer to the map.
+
+        Params:
+            url (str): The URL of the image layer
+            bounds (tuple): The bounds of the image layer ((south, west), (north, east))
+            opacity (float): The opacity of the image layer
+            **kwargs: Additional keyword arguments
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_image(url='https://example.com/image.png', bounds=((40, -100), (30, -90)), opacity=0.5)
+            ```
+        """
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+
+        if bounds is None:
+            bounds = ((-90, -180), (90, 180))
+
+        try:
+            image_layer = ipyleaflet.ImageOverlay(
+                url=url, bounds=bounds, opacity=opacity, **kwargs
+            )
+            self.add(image_layer)
+            self.fit_bounds(bounds)
+        except Exception as e:
+            logging.warning(f"There was an error adding the image layer: {e}")
+
+    def add_video(self, url, bounds=None, opacity=1.0, **kwargs):
+        """Add a video layer to the map.
+
+        Params:
+            url (str): The URL of the video layer
+            bounds (tuple): The bounds of the video layer ((south, west), (north, east))
+            opacity (float): The opacity of the video layer
+            **kwargs: Additional keyword arguments
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_video(url='https://example.com/video.mp4', bounds=((40, -100), (30, -90)), opacity=0.5)
+            ```
+        """
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+        if bounds is None:
+            bounds = ((13, -130), (32, -100))
+
+        try:
+            video_layer = ipyleaflet.VideoOverlay(
+                url=url, opacity=opacity, bounds=bounds, **kwargs
+            )
+            self.add(video_layer)
+            self.fit_bounds(bounds)
+        except Exception as e:
+            logging.warning(f"There was an error adding the video layer: {e}")
+
+    def add_wms_layer(
+        self, url, layers, name, format="image/png", transparent=True, **kwargs
+    ):
+        """Add a WMS layer to the map.
+
+        Params:
+            url (str): The URL of the WMS layer
+            layers (str): The layers of the WMS layer
+            name (str): The name of the WMS layer
+            format (str): The format of the WMS layer
+            transparent (bool): Whether the WMS layer is transparent
+            **kwargs: Additional keyword arguments
+
+        Examples:
+            ```python
+            m = LeafMap.Map()
+            m.add_wms_layer(url="https://ows.terrestris.de/osm/service",
+                layers="OSM-WMS",
+                name="WMS Layer",
+                format="image/png",
+                transparent=True,
+            )
+            ```
+        """
+        if url is None:
+            logging.warning(f"Please provide a URL.")
+            return
+
+        try:
+            wms_layer = ipyleaflet.WMSLayer(
+                url=url,
+                layers=layers,
+                name=name,
+                format=format,
+                transparent=transparent,
+                **kwargs,
+            )
+            self.__layers[name] = wms_layer
+            self.add(wms_layer)
+        except Exception as e:
+            logging.warning(f"There was an error adding the WMS layer: {e}")
