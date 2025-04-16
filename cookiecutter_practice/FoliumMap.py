@@ -1,9 +1,15 @@
 import folium
 import logging
 import geopandas as gpd
+import ipywidgets as widgets
+from IPython.display import display, clear_output
 
 
 class Map(folium.Map):
+    __basemaps__ = {}
+    __controls__ = None
+    __current_basemap__ = None
+
     def __init__(self, center=(20, 0), zoom=2, height="100%", **kwargs):
         """Create a FoliumMap Map instance.
 
@@ -15,6 +21,11 @@ class Map(folium.Map):
 
         """
         super().__init__(location=center, zoom_start=zoom, height=height, **kwargs)
+        # self.__current_map__ = self
+        basemap = next(iter(self.__dict__["_children"].items()))
+        self.__basemaps__[f"{basemap[0]}"] = basemap[1]
+        self.__current_basemap__ = basemap[1]
+        self.map_output = widgets.Output()
         # self.add_control(ipyleaflet.LayersControl())
 
     def add_basemap(self, basemap="OpenStreetMap"):
@@ -23,14 +34,19 @@ class Map(folium.Map):
         Params:
             basemap (str): The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap', 'Stamen Terrain', 'Stamen Toner', 'Stamen Watercolor', 'CartoDB positron', 'CartoDB dark_matter', 'OpenTopoMap'
 
+        Returns:
+            None
+
         You may refer here for other basemaps to use: [Leaflet Providers](https://leaflet-extras.github.io/leaflet-providers/preview/)
 
         """
         try:
-            folium.TileLayer(basemap).add_to(self)
+            base = folium.TileLayer(basemap)
+            base.add_to(self)
+            self.__basemaps__[f"{base.get_name()}"] = base
+            self.__current_basemap__ = base
         except ValueError:
             logging.warning(f"Basemap {basemap} not found. No basemap added.")
-            folium.TileLayer("OpenStreetMap").add_to(self)
 
     def add_layer_control(self, position="topright"):
         """Add a layer control to the map.
@@ -38,12 +54,19 @@ class Map(folium.Map):
         Params:
             position (str): The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright'
 
+        Returns:
+            None
+
         """
         if position not in ["topleft", "topright", "bottomleft", "bottomright"]:
             logging.warning(f"Position {position} not valid. Using topright instead.")
-            folium.LayerControl(position="topright").add_to(self)
+            control = folium.LayerControl(position="topright")
+            control.add_to(self)
+            self.__controls__ = control
         else:
-            folium.LayerControl(position=position).add_to(self)
+            control = folium.LayerControl(position=position)
+            control.add_to(self)
+            self.__controls__ = control
 
     def add_vector(self, name, url=None, geo_data=None, **kwargs):
         """Add a vector layer to the map.
@@ -54,6 +77,9 @@ class Map(folium.Map):
             geo_data (geopandas.GeoDataFrame): A GeoDataFrame containing the vector data
             style (dict, function): A dictionary of Folium Path options or a function defining the style of the vector layer
             highlight_style (dict, function): A dictionary of Folium Path options or a function defining the style of the vector layer when highlighted
+
+        Returns:
+            None
 
         Examples:
             ```python
@@ -140,6 +166,9 @@ class Map(folium.Map):
             opacity (float): The opacity of the raster layer
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = FoliumMap.Map()
@@ -175,6 +204,9 @@ class Map(folium.Map):
             opacity (float): The opacity of the image layer
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = FoliumMap.Map()
@@ -203,6 +235,9 @@ class Map(folium.Map):
             bounds (tuple): The bounds of the video layer ((south, west), (north, east))
             opacity (float): The opacity of the video layer
             **kwargs: Additional keyword arguments
+
+        Returns:
+            None
 
         Examples:
             ```python
@@ -237,6 +272,9 @@ class Map(folium.Map):
             transparent (bool): Whether the WMS layer is transparent
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = FoliumMap.Map()
@@ -263,3 +301,74 @@ class Map(folium.Map):
             ).add_to(self)
         except Exception as e:
             logging.warning(f"There was an error adding the WMS layer: {e}")
+
+    def add_basemap_gui(self, position="flex-end"):
+        """Add a basemap GUI to the map.
+
+        This method creates a dropdown menu to select the basemap.
+        The selected basemap is then applied to the map.
+
+        Params:
+            position (str): The position of the dropdown menu (one of the map corners), can be 'flex-start', 'flex-end', 'center' or 'space-between'
+
+        Returns:
+            None
+
+        """
+        clear_output(wait=True)
+
+        def update_map(change):
+            """Update the map with the selected basemap."""
+            # Implement functionality to update the map with the selected basemap
+            with self.map_output:
+                clear_output(wait=True)
+                new_basemap = change["new"]
+                new_map = folium.Map(tiles=self.__current_basemap__)
+                self.__current_basemap__ = new_basemap
+                for key, value in self.__dict__.items():
+                    if key[0] == "_":
+                        continue
+                    new_map.__dict__[key] = value
+                for key, value in self.__dict__["_children"].items():
+                    if key == new_basemap.get_name():
+                        continue
+                    elif isinstance(value, folium.LayerControl):
+                        continue
+                    else:
+                        new_map.add_child(value)
+                new_basemap.add_to(new_map)
+                if self.__controls__ is not None:
+                    new_map.add_child(self.__controls__)
+                self.__dict__.update(new_map.__dict__)
+                display(new_map)
+
+        def toggle_dropdown(b):
+            """Toggle the dropdown menu."""
+            if dropdown.layout.display == "none":
+                dropdown.layout.display = "block"
+                btn.icon = "times"
+            else:
+                dropdown.layout.display = "none"
+                btn.icon = "chevron-left"
+
+        dropdown = widgets.Dropdown(
+            options=self.__basemaps__.items(),
+            value=self.__current_basemap__,
+            description="Basemaps:",
+            layout=widgets.Layout(display="block", width="auto"),
+        )
+        btn = widgets.Button(
+            icon="times",
+            button_style="primary",
+            layout=widgets.Layout(width="35px", height="35px"),
+        )
+        btn.on_click(toggle_dropdown)
+        self.hbox = widgets.HBox(
+            [dropdown, btn], layout=widgets.Layout(justify_content=position)
+        )
+        dropdown.observe(update_map, names="value")
+
+        display(self.hbox)
+        with self.map_output:
+            display(self)
+        display(self.map_output)
