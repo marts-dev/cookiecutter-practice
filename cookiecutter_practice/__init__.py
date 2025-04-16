@@ -2,6 +2,6 @@
 
 __author__ = """Martin Arrogante"""
 __email__ = "arrogantemartin@gmail.com"
-__version__ = "3.0.1"
+__version__ = "4.0.0"
 
 from cookiecutter_practice import FoliumMap, LeafMap
