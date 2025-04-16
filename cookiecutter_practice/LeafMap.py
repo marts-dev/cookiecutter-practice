@@ -26,6 +26,9 @@ class Map(ipyleaflet.Map):
         Params:
             basemap (str): The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
 
+        Returns:
+            None
+
         """
         try:
             url = eval(f"ipyleaflet.basemaps.{basemap}").build_url()
@@ -34,7 +37,12 @@ class Map(ipyleaflet.Map):
             self.add(item=layer)
         except AttributeError:
             logging.warning(f"Basemap {basemap} not found. Using OpenTopoMap instead.")
-            self.add(ipyleaflet.basemaps.OpenTopoMap)
+            layer = ipyleaflet.TileLayer(
+                name=ipyleaflet.basemaps.OpenTopoMap.name,
+                url=ipyleaflet.basemaps.OpenTopoMap.build_url(),
+            )
+            self.__layers[ipyleaflet.basemaps.OpenTopoMap.name] = layer
+            self.add(layer)
 
     def remove_basemap(self, basemap):
         """Remove a basemap/layer from the map.
@@ -42,15 +50,21 @@ class Map(ipyleaflet.Map):
         Params:
             basemap (str): The name of the basemap/layer to remove. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
 
+        Returns:
+            bool: True if the basemap/layer was removed, False otherwise
+
         """
         try:
             if basemap in self.__layers:
                 self.remove(self.__layers[basemap])
                 self.__layers.pop(basemap)
+                return True
             else:
-                logging.warning(f"Basemap {basemap} not found.")
+                logging.warning(f"Basemap/layer {basemap} not found.")
+                return False
         except AttributeError:
-            logging.warning(f"There was an error removing the basemap {basemap}.")
+            logging.warning(f"There was an error removing the basemap/layer {basemap}.")
+            return False
 
     def add_layer_control(self, position="topright"):
         """Add a layer control to the map.
@@ -85,6 +99,9 @@ class Map(ipyleaflet.Map):
             style (dict): A dictionary of Leaflet Path options
             hover_style (dict): A dictionary of Leaflet Path options
             point_style (dict): A dictionary of Leaflet Path options
+
+        Returns:
+            None
 
         Examples:
             ```python
@@ -130,6 +147,9 @@ class Map(ipyleaflet.Map):
             opacity (float): The opacity of the raster layer
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = LeafMap.Map()
@@ -163,6 +183,9 @@ class Map(ipyleaflet.Map):
             opacity (float): The opacity of the image layer
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = LeafMap.Map()
@@ -193,6 +216,9 @@ class Map(ipyleaflet.Map):
             bounds (tuple): The bounds of the video layer ((south, west), (north, east))
             opacity (float): The opacity of the video layer
             **kwargs: Additional keyword arguments
+
+        Returns:
+            None
 
         Examples:
             ```python
@@ -228,6 +254,9 @@ class Map(ipyleaflet.Map):
             transparent (bool): Whether the WMS layer is transparent
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = LeafMap.Map()
@@ -256,3 +285,60 @@ class Map(ipyleaflet.Map):
             self.add(wms_layer)
         except Exception as e:
             logging.warning(f"There was an error adding the WMS layer: {e}")
+
+    def add_basemap_gui(self, position="topright"):
+        """Add a basemap GUI to the map.
+
+        This method creates a dropdown menu to select the basemap.
+        The selected basemap is then applied to the map.
+
+        Params:
+            position (str): The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright'
+
+        Returns:
+            None
+
+        """
+        from ipywidgets import Dropdown, HBox, Button, Layout
+        from ipyleaflet import basemaps, WidgetControl
+
+        basemap_options = {
+            "OpenStreetMap.Mapnik": basemaps.OpenStreetMap.Mapnik,
+            "OpenTopoMap": basemaps.OpenTopoMap,
+            "Esri.WorldImagery": basemaps.Esri.WorldImagery,
+            "CartoDB.Positron": basemaps.CartoDB.Positron,
+        }
+
+        dropdown = Dropdown(
+            options=basemap_options,
+            description="Basemap:",
+            value=basemaps.OpenStreetMap.Mapnik,
+            layout=Layout(display="block", width="auto"),
+        )
+        button = Button(
+            icon="times",
+            button_style="primary",
+            layout=Layout(width="35px", height="35px"),
+        )
+
+        def toggle_dropdown(b):
+            if dropdown.layout.display == "none":
+                dropdown.layout.display = "block"
+                button.icon = "times"
+            else:
+                dropdown.layout.display = "none"
+                button.icon = "chevron-left"
+
+        def handle_dropdown_change(change):
+            from ipyleaflet import basemap_to_tiles
+
+            if change["new"] != change["old"]:
+                self.substitute_layer(self.layers[0], basemap_to_tiles(change["new"]))
+                dropdown.value = change["new"]
+
+        dropdown.observe(handle_dropdown_change, names="value")
+
+        button.on_click(toggle_dropdown)
+        self.add_control(
+            WidgetControl(widget=HBox([dropdown, button]), position=position)
+        )
