@@ -41,9 +41,10 @@ class Map(folium.Map):
 
         """
         try:
-            base = folium.TileLayer(basemap)
+            base = folium.TileLayer(basemap, name=basemap)
+            display(base.layer_name)
             base.add_to(self)
-            self.__basemaps__[f"{base.get_name()}"] = base
+            self.__basemaps__[f"{base.layer_name}"] = base
             self.__current_basemap__ = base
         except ValueError:
             logging.warning(f"Basemap {basemap} not found. No basemap added.")

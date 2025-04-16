@@ -26,6 +26,9 @@ class Map(ipyleaflet.Map):
         Params:
             basemap (str): The name of the basemap/layer to add. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
 
+        Returns:
+            None
+
         """
         try:
             url = eval(f"ipyleaflet.basemaps.{basemap}").build_url()
@@ -38,24 +41,30 @@ class Map(ipyleaflet.Map):
                 name=ipyleaflet.basemaps.OpenTopoMap.name,
                 url=ipyleaflet.basemaps.OpenTopoMap.build_url(),
             )
-            self.__layers[basemap] = layer
+            self.__layers[ipyleaflet.basemaps.OpenTopoMap.name] = layer
             self.add(layer)
 
-    def remove_layer(self, basemap):
+    def remove_basemap(self, basemap):
         """Remove a basemap/layer from the map.
 
         Params:
             basemap (str): The name of the basemap/layer to remove. Can be one of the following: 'OpenStreetMap.Mapnik', 'OpenStreetMap.BlackAndWhite', 'OpenStreetMap.DE', 'OpenStreetMap.France', 'OpenStreetMap.HOT', 'OpenStreetMap.Mapnik', 'OpenStreetMap.CH', 'OpenStreetMap.BZH', 'OpenStreetMap.Land', 'OpenStreetMap.HYB', 'OpenStreetMap.OSM
+
+        Returns:
+            bool: True if the basemap/layer was removed, False otherwise
 
         """
         try:
             if basemap in self.__layers:
                 self.remove(self.__layers[basemap])
                 self.__layers.pop(basemap)
+                return True
             else:
-                logging.warning(f"Basemap {basemap} not found.")
+                logging.warning(f"Basemap/layer {basemap} not found.")
+                return False
         except AttributeError:
-            logging.warning(f"There was an error removing the basemap {basemap}.")
+            logging.warning(f"There was an error removing the basemap/layer {basemap}.")
+            return False
 
     def add_layer_control(self, position="topright"):
         """Add a layer control to the map.
@@ -90,6 +99,9 @@ class Map(ipyleaflet.Map):
             style (dict): A dictionary of Leaflet Path options
             hover_style (dict): A dictionary of Leaflet Path options
             point_style (dict): A dictionary of Leaflet Path options
+
+        Returns:
+            None
 
         Examples:
             ```python
@@ -135,6 +147,9 @@ class Map(ipyleaflet.Map):
             opacity (float): The opacity of the raster layer
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = LeafMap.Map()
@@ -168,6 +183,9 @@ class Map(ipyleaflet.Map):
             opacity (float): The opacity of the image layer
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = LeafMap.Map()
@@ -198,6 +216,9 @@ class Map(ipyleaflet.Map):
             bounds (tuple): The bounds of the video layer ((south, west), (north, east))
             opacity (float): The opacity of the video layer
             **kwargs: Additional keyword arguments
+
+        Returns:
+            None
 
         Examples:
             ```python
@@ -233,6 +254,9 @@ class Map(ipyleaflet.Map):
             transparent (bool): Whether the WMS layer is transparent
             **kwargs: Additional keyword arguments
 
+        Returns:
+            None
+
         Examples:
             ```python
             m = LeafMap.Map()
@@ -263,7 +287,18 @@ class Map(ipyleaflet.Map):
             logging.warning(f"There was an error adding the WMS layer: {e}")
 
     def add_basemap_gui(self, position="topright"):
-        """Add a basemap GUI to the map."""
+        """Add a basemap GUI to the map.
+
+        This method creates a dropdown menu to select the basemap.
+        The selected basemap is then applied to the map.
+
+        Params:
+            position (str): The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright'
+
+        Returns:
+            None
+
+        """
         from ipywidgets import Dropdown, HBox, Button, Layout
         from ipyleaflet import basemaps, WidgetControl
 

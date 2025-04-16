@@ -82,6 +82,7 @@ nav:
     - Examples:
         - examples/intro.ipynb
         - examples/rasterdata.ipynb
+        - examples/widgets.ipynb
     - API Reference:
           - cookiecutter_practice module: cookiecutter_practice.md
           - common module: common.md
