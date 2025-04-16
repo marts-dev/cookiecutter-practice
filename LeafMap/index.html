@@ -500,6 +500,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/widgets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Widgets
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -687,6 +710,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cookiecutter_practice.LeafMap.Map.add_basemap_gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_basemap_gui()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cookiecutter_practice.LeafMap.Map.add_image" class="md-nav__link">
     <span class="md-ellipsis">
       add_image()
@@ -866,6 +898,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cookiecutter_practice.LeafMap.Map.add_basemap_gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_basemap_gui()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cookiecutter_practice.LeafMap.Map.add_image" class="md-nav__link">
     <span class="md-ellipsis">
       add_image()
@@ -1024,6 +1065,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">        Params:</span>
 <span class="sd">            basemap (str): The name of the basemap/layer to add. Can be one of the following: &#39;OpenStreetMap.Mapnik&#39;, &#39;OpenStreetMap.BlackAndWhite&#39;, &#39;OpenStreetMap.DE&#39;, &#39;OpenStreetMap.France&#39;, &#39;OpenStreetMap.HOT&#39;, &#39;OpenStreetMap.Mapnik&#39;, &#39;OpenStreetMap.CH&#39;, &#39;OpenStreetMap.BZH&#39;, &#39;OpenStreetMap.Land&#39;, &#39;OpenStreetMap.HYB&#39;, &#39;OpenStreetMap.OSM</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ipyleaflet.basemaps.</span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">build_url</span><span class="p">()</span>
@@ -1032,7 +1076,12 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basemap </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2"> not found. Using OpenTopoMap instead.&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="p">)</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="o">.</span><span class="n">build_url</span><span class="p">(),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__layers</span><span class="p">[</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_basemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basemap</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a basemap/layer from the map.</span>
@@ -1040,15 +1089,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">        Params:</span>
 <span class="sd">            basemap (str): The name of the basemap/layer to remove. Can be one of the following: &#39;OpenStreetMap.Mapnik&#39;, &#39;OpenStreetMap.BlackAndWhite&#39;, &#39;OpenStreetMap.DE&#39;, &#39;OpenStreetMap.France&#39;, &#39;OpenStreetMap.HOT&#39;, &#39;OpenStreetMap.Mapnik&#39;, &#39;OpenStreetMap.CH&#39;, &#39;OpenStreetMap.BZH&#39;, &#39;OpenStreetMap.Land&#39;, &#39;OpenStreetMap.HYB&#39;, &#39;OpenStreetMap.OSM</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the basemap/layer was removed, False otherwise</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">basemap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__layers</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__layers</span><span class="p">[</span><span class="n">basemap</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__layers</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">basemap</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basemap </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basemap/layer </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There was an error removing the basemap </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There was an error removing the basemap/layer </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_layer_control</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">&quot;topright&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a layer control to the map.</span>
@@ -1083,6 +1138,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">            style (dict): A dictionary of Leaflet Path options</span>
 <span class="sd">            hover_style (dict): A dictionary of Leaflet Path options</span>
 <span class="sd">            point_style (dict): A dictionary of Leaflet Path options</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
@@ -1128,6 +1186,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">            opacity (float): The opacity of the raster layer</span>
 <span class="sd">            **kwargs: Additional keyword arguments</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
 <span class="sd">            m = LeafMap.Map()</span>
@@ -1161,6 +1222,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">            opacity (float): The opacity of the image layer</span>
 <span class="sd">            **kwargs: Additional keyword arguments</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
 <span class="sd">            m = LeafMap.Map()</span>
@@ -1191,6 +1255,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">            bounds (tuple): The bounds of the video layer ((south, west), (north, east))</span>
 <span class="sd">            opacity (float): The opacity of the video layer</span>
 <span class="sd">            **kwargs: Additional keyword arguments</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
@@ -1226,6 +1293,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">            transparent (bool): Whether the WMS layer is transparent</span>
 <span class="sd">            **kwargs: Additional keyword arguments</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
 <span class="sd">            m = LeafMap.Map()</span>
@@ -1254,6 +1324,63 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">wms_layer</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There was an error adding the WMS layer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_basemap_gui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">&quot;topright&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a basemap GUI to the map.</span>
+
+<span class="sd">        This method creates a dropdown menu to select the basemap.</span>
+<span class="sd">        The selected basemap is then applied to the map.</span>
+
+<span class="sd">        Params:</span>
+<span class="sd">            position (str): The position of the control (one of the map corners), can be &#39;topleft&#39;, &#39;topright&#39;, &#39;bottomleft&#39; or &#39;bottomright&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ipywidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dropdown</span><span class="p">,</span> <span class="n">HBox</span><span class="p">,</span> <span class="n">Button</span><span class="p">,</span> <span class="n">Layout</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ipyleaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">basemaps</span><span class="p">,</span> <span class="n">WidgetControl</span>
+
+        <span class="n">basemap_options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;OpenStreetMap.Mapnik&quot;</span><span class="p">:</span> <span class="n">basemaps</span><span class="o">.</span><span class="n">OpenStreetMap</span><span class="o">.</span><span class="n">Mapnik</span><span class="p">,</span>
+            <span class="s2">&quot;OpenTopoMap&quot;</span><span class="p">:</span> <span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="p">,</span>
+            <span class="s2">&quot;Esri.WorldImagery&quot;</span><span class="p">:</span> <span class="n">basemaps</span><span class="o">.</span><span class="n">Esri</span><span class="o">.</span><span class="n">WorldImagery</span><span class="p">,</span>
+            <span class="s2">&quot;CartoDB.Positron&quot;</span><span class="p">:</span> <span class="n">basemaps</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">dropdown</span> <span class="o">=</span> <span class="n">Dropdown</span><span class="p">(</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">basemap_options</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Basemap:&quot;</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenStreetMap</span><span class="o">.</span><span class="n">Mapnik</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">button</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+            <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;times&quot;</span><span class="p">,</span>
+            <span class="n">button_style</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;35px&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">&quot;35px&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">toggle_dropdown</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">dropdown</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+                <span class="n">dropdown</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;block&quot;</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">icon</span> <span class="o">=</span> <span class="s2">&quot;times&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dropdown</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+                <span class="n">button</span><span class="o">.</span><span class="n">icon</span> <span class="o">=</span> <span class="s2">&quot;chevron-left&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">handle_dropdown_change</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">ipyleaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">basemap_to_tiles</span>
+
+            <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;old&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">substitute_layer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">basemap_to_tiles</span><span class="p">(</span><span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]))</span>
+                <span class="n">dropdown</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]</span>
+
+        <span class="n">dropdown</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">handle_dropdown_change</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+
+        <span class="n">button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">toggle_dropdown</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span>
+            <span class="n">WidgetControl</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="n">HBox</span><span class="p">([</span><span class="n">dropdown</span><span class="p">,</span> <span class="n">button</span><span class="p">]),</span> <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+        <span class="p">)</span>
 </code></pre></div>
         </details>
 
@@ -1378,6 +1505,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       </tr>
   </tbody>
 </table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><p>None</p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>cookiecutter_practice/LeafMap.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_basemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basemap</span><span class="o">=</span><span class="s2">&quot;OpenTopoMap&quot;</span><span class="p">):</span>
@@ -1385,6 +1527,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 
 <span class="sd">    Params:</span>
 <span class="sd">        basemap (str): The name of the basemap/layer to add. Can be one of the following: &#39;OpenStreetMap.Mapnik&#39;, &#39;OpenStreetMap.BlackAndWhite&#39;, &#39;OpenStreetMap.DE&#39;, &#39;OpenStreetMap.France&#39;, &#39;OpenStreetMap.HOT&#39;, &#39;OpenStreetMap.Mapnik&#39;, &#39;OpenStreetMap.CH&#39;, &#39;OpenStreetMap.BZH&#39;, &#39;OpenStreetMap.Land&#39;, &#39;OpenStreetMap.HYB&#39;, &#39;OpenStreetMap.OSM</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1394,7 +1539,128 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basemap </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2"> not found. Using OpenTopoMap instead.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="p">)</span>
+        <span class="n">layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="o">.</span><span class="n">build_url</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__layers</span><span class="p">[</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="cookiecutter_practice.LeafMap.Map.add_basemap_gui" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_basemap_gui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;topright&#39;</span><span class="p">)</span></code>
+
+
+<a href="#cookiecutter_practice.LeafMap.Map.add_basemap_gui" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add a basemap GUI to the map.</p>
+<p>This method creates a dropdown menu to select the basemap.
+The selected basemap is then applied to the map.</p>
+
+<p><strong>Parameters:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><code>position</code></td>
+        <td><code>str</code></td>
+        <td><p>The position of the control (one of the map corners), can be 'topleft', 'topright', 'bottomleft' or 'bottomright'</p></td>
+        <td><code>&#39;topright&#39;</code></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><p>None</p></td>
+    </tr>
+  </tbody>
+</table>
+        <details class="quote">
+          <summary>Source code in <code>cookiecutter_practice/LeafMap.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_basemap_gui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">&quot;topright&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a basemap GUI to the map.</span>
+
+<span class="sd">    This method creates a dropdown menu to select the basemap.</span>
+<span class="sd">    The selected basemap is then applied to the map.</span>
+
+<span class="sd">    Params:</span>
+<span class="sd">        position (str): The position of the control (one of the map corners), can be &#39;topleft&#39;, &#39;topright&#39;, &#39;bottomleft&#39; or &#39;bottomright&#39;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ipywidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dropdown</span><span class="p">,</span> <span class="n">HBox</span><span class="p">,</span> <span class="n">Button</span><span class="p">,</span> <span class="n">Layout</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ipyleaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">basemaps</span><span class="p">,</span> <span class="n">WidgetControl</span>
+
+    <span class="n">basemap_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;OpenStreetMap.Mapnik&quot;</span><span class="p">:</span> <span class="n">basemaps</span><span class="o">.</span><span class="n">OpenStreetMap</span><span class="o">.</span><span class="n">Mapnik</span><span class="p">,</span>
+        <span class="s2">&quot;OpenTopoMap&quot;</span><span class="p">:</span> <span class="n">basemaps</span><span class="o">.</span><span class="n">OpenTopoMap</span><span class="p">,</span>
+        <span class="s2">&quot;Esri.WorldImagery&quot;</span><span class="p">:</span> <span class="n">basemaps</span><span class="o">.</span><span class="n">Esri</span><span class="o">.</span><span class="n">WorldImagery</span><span class="p">,</span>
+        <span class="s2">&quot;CartoDB.Positron&quot;</span><span class="p">:</span> <span class="n">basemaps</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">dropdown</span> <span class="o">=</span> <span class="n">Dropdown</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">basemap_options</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Basemap:&quot;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">basemaps</span><span class="o">.</span><span class="n">OpenStreetMap</span><span class="o">.</span><span class="n">Mapnik</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">button</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span>
+        <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;times&quot;</span><span class="p">,</span>
+        <span class="n">button_style</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;35px&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">&quot;35px&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_dropdown</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dropdown</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+            <span class="n">dropdown</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;block&quot;</span>
+            <span class="n">button</span><span class="o">.</span><span class="n">icon</span> <span class="o">=</span> <span class="s2">&quot;times&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dropdown</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+            <span class="n">button</span><span class="o">.</span><span class="n">icon</span> <span class="o">=</span> <span class="s2">&quot;chevron-left&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_dropdown_change</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ipyleaflet</span><span class="w"> </span><span class="kn">import</span> <span class="n">basemap_to_tiles</span>
+
+        <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;old&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">substitute_layer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">basemap_to_tiles</span><span class="p">(</span><span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]))</span>
+            <span class="n">dropdown</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]</span>
+
+    <span class="n">dropdown</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">handle_dropdown_change</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+
+    <span class="n">button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">toggle_dropdown</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span>
+        <span class="n">WidgetControl</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="n">HBox</span><span class="p">([</span><span class="n">dropdown</span><span class="p">,</span> <span class="n">button</span><span class="p">]),</span> <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+    <span class="p">)</span>
 </code></pre></div>
         </details>
     </div>
@@ -1454,6 +1720,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       </tr>
   </tbody>
 </table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><p>None</p></td>
+    </tr>
+  </tbody>
+</table>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">LeafMap</span><span class="o">.</span><span class="n">Map</span><span class="p">()</span>
@@ -1470,6 +1751,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">        bounds (tuple): The bounds of the image layer ((south, west), (north, east))</span>
 <span class="sd">        opacity (float): The opacity of the image layer</span>
 <span class="sd">        **kwargs: Additional keyword arguments</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        ```python</span>
@@ -1614,6 +1898,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       </tr>
   </tbody>
 </table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><p>None</p></td>
+    </tr>
+  </tbody>
+</table>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">LeafMap</span><span class="o">.</span><span class="n">Map</span><span class="p">()</span>
@@ -1631,6 +1930,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">        colormap (str): The colormap to use for the raster layer</span>
 <span class="sd">        opacity (float): The opacity of the raster layer</span>
 <span class="sd">        **kwargs: Additional keyword arguments</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        ```python</span>
@@ -1726,6 +2028,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       </tr>
   </tbody>
 </table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><p>None</p></td>
+    </tr>
+  </tbody>
+</table>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">LeafMap</span><span class="o">.</span><span class="n">Map</span><span class="p">()</span>
@@ -1744,6 +2061,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">        style (dict): A dictionary of Leaflet Path options</span>
 <span class="sd">        hover_style (dict): A dictionary of Leaflet Path options</span>
 <span class="sd">        point_style (dict): A dictionary of Leaflet Path options</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        ```python</span>
@@ -1837,6 +2157,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       </tr>
   </tbody>
 </table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><p>None</p></td>
+    </tr>
+  </tbody>
+</table>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">LeafMap</span><span class="o">.</span><span class="n">Map</span><span class="p">()</span>
@@ -1853,6 +2188,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">        bounds (tuple): The bounds of the video layer ((south, west), (north, east))</span>
 <span class="sd">        opacity (float): The opacity of the video layer</span>
 <span class="sd">        **kwargs: Additional keyword arguments</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        ```python</span>
@@ -1945,6 +2283,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       </tr>
   </tbody>
 </table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><p>None</p></td>
+    </tr>
+  </tbody>
+</table>
 <p><strong>Examples:</strong></p>
     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -1975,6 +2328,9 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">        format (str): The format of the WMS layer</span>
 <span class="sd">        transparent (bool): Whether the WMS layer is transparent</span>
 <span class="sd">        **kwargs: Additional keyword arguments</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        ```python</span>
@@ -2045,6 +2401,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
       </tr>
   </tbody>
 </table>
+<p><strong>Returns:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>bool</code></td>
+      <td><p>True if the basemap/layer was removed, False otherwise</p></td>
+    </tr>
+  </tbody>
+</table>
         <details class="quote">
           <summary>Source code in <code>cookiecutter_practice/LeafMap.py</code></summary>
           <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_basemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basemap</span><span class="p">):</span>
@@ -2053,15 +2424,21 @@ Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="sd">    Params:</span>
 <span class="sd">        basemap (str): The name of the basemap/layer to remove. Can be one of the following: &#39;OpenStreetMap.Mapnik&#39;, &#39;OpenStreetMap.BlackAndWhite&#39;, &#39;OpenStreetMap.DE&#39;, &#39;OpenStreetMap.France&#39;, &#39;OpenStreetMap.HOT&#39;, &#39;OpenStreetMap.Mapnik&#39;, &#39;OpenStreetMap.CH&#39;, &#39;OpenStreetMap.BZH&#39;, &#39;OpenStreetMap.Land&#39;, &#39;OpenStreetMap.HYB&#39;, &#39;OpenStreetMap.OSM</span>
 
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the basemap/layer was removed, False otherwise</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">basemap</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__layers</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__layers</span><span class="p">[</span><span class="n">basemap</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__layers</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">basemap</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basemap </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Basemap/layer </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There was an error removing the basemap </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There was an error removing the basemap/layer </span><span class="si">{</span><span class="n">basemap</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
 </code></pre></div>
         </details>
     </div>
