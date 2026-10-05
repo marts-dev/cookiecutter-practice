@@ -2,7 +2,6 @@
 
 """Tests for `cookiecutter_practice` package."""
 
-
 import unittest
 
 from cookiecutter_practice import cookiecutter_practice
